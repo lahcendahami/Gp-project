@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<cache xmlns="http://maven.apache.org/BUILD-CACHE-CONFIG/1.0.0" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xsi:schemaLocation="http://maven.apache.org/BUILD-CACHE-CONFIG/1.0.0 https://maven.apache.org/xsd/build-cache-config-1.0.0.xsd">
+    <configuration>
+        <enabled>false</enabled>
+        <local>
+            <maxBuildsCached>3</maxBuildsCached>
+        </local>
+        <remote enabled="true" saveToRemote="true" id="nexus">
+            <url>http://localhost:8081/repository/maven-build-cache</url>
+        </remote>
+        <hashAlgorithm>SHA-256</hashAlgorithm>
+        <validateXml>true</validateXml>
+        <projectVersioning adjustMetaInf="true"/>
+        <!-- <attachedOutputs>
+            <dirNames>
+                <dirName>surefire-reports</dirName>
+                <dirName>jacoco</dirName>
+            </dirNames>
+        </attachedOutputs> -->
+    </configuration>
+    <input>
+        <global>
+            <excludes>
+                <exclude>README.md</exclude>
+                <exclude>readme.md</exclude>
+                <exclude>CONTRIBUTING.md</exclude>
+            </excludes>
+            <glob>*</glob>
+            <includes>
+                <include>src/</include>
+            </includes>
+        </global>
+    </input>
+</cache>
