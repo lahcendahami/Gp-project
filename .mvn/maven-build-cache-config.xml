@@ -3,9 +3,9 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xsi:schemaLocation="http://maven.apache.org/BUILD-CACHE-CONFIG/1.0.0 https://maven.apache.org/xsd/build-cache-config-1.0.0.xsd">
     <configuration>
-        <enabled>false</enabled>
+        <enabled>true</enabled>
         <local>
-            <maxBuildsCached>3</maxBuildsCached>
+            <maxBuildsCached>2</maxBuildsCached>
         </local>
         <remote enabled="true" saveToRemote="true" id="nexus">
             <url>http://localhost:8081/repository/maven-build-cache</url>
