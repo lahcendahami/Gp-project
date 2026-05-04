@@ -17,10 +17,11 @@
         <jacoco.version>0.8.12</jacoco.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <sonar.projectKey>maven</sonar.projectKey>
-        <sonar.projectName>maven</sonar.projectName>
+        <sonar.projectKey>Gp-maven-project</sonar.projectKey>
+        <sonar.projectName>Gp-maven-project</sonar.projectName>
         <sonar.host.url>http://localhost:9000</sonar.host.url>
     </properties>
+    <!-- add some properties here -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -51,6 +52,20 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <distributionManagement>
+      <snapshotRepository>
+        <uniqueVersion>false</uniqueVersion>
+        <id>nexus</id>
+        <name>nexus snapshots</name>
+        <url>http://localhost:8081/repository/maven-snapshots/</url>
+      </snapshotRepository>
+      <repository>
+        <uniqueVersion>true</uniqueVersion>
+        <id>nexus</id>
+        <name>nexus releases</name>
+        <url>http://localhost:8081/repository/maven-releases/</url>
+      </repository>
+    </distributionManagement>
 
     <build>
         <pluginManagement>
