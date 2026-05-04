@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class InventoryRequest {
 
-    @NotNull(message = "Product ID is required")
+    @NotNull(message = "Product ID is required ")
     private Long productId;
 
     @NotBlank(message = "SKU is required")
