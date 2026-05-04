@@ -2,13 +2,14 @@ def buildAll = false
 def affectedModules = [] as Set
 def build_goal = "clean install -DskipTests"
 def test_goal = "test"
+
 pipeline {
     agent any
     options {
         disableConcurrentBuilds()
     }
     environment {
-        CHANGE_TARGET = "main"
+        CHANGE_TARGET = "develop"
         SONAR_TOKEN = credentials('sonar-token')
     }
     tools {
@@ -16,28 +17,52 @@ pipeline {
         jdk 'jdk-17'
     }
     stages {
+
         stage('Analyze Changes') {
             steps {
                 script {
-                    echo "Push Triggered on ${env.BRANCH_NAME}"
-                    echo "Detect Changes committed"
-                    def changes = bat(script: 'git diff --name-only HEAD~1 HEAD', returnStdout: true)
-                        .trim().split('\n').toList()
-                    def changedModules = [] as Set
-                    for (change in changes) {
-                        if (change == 'pom.xml' || change.startsWith("shared-lib/") || change == "services/pom.xml" || change.startsWith(".mvn/")) {
-                            buildAll = true
-                            break
+                    if (env.CHANGE_ID) {
+                        echo "Pull request Triggered on ${env.CHANGE_BRANCH} to ${env.CHANGE_TARGET}"
+                        echo "fetch origin ${env.CHANGE_TARGET}"
+                        bat "git fetch origin ${env.CHANGE_TARGET}"
+                        def changes = bat(script: "git diff --name-only origin/${env.CHANGE_TARGET}...HEAD", returnStdout: true)
+                            .trim().split('\n').toList()
+                        def changedModules = [] as Set
+                        for (change in changes) {
+                            if (change == 'pom.xml' || change.startsWith("shared-lib/") || change == "services/pom.xml" || change.startsWith(".mvn/")) {
+                                buildAll = true
+                                break
+                            }
+                            def parts = change.split('/')
+                            if (parts.size() >= 2) {
+                                changedModules << "${parts[0]}/${parts[1]}"
+                            }
                         }
-                        def parts = change.split('/')
-                        if (parts.size() >= 2) {
-                            changedModules << "${parts[0]}/${parts[1]}"
+                        env.CHANGED_MODULES = changedModules.join(',')
+                        echo "CHANGED_MODULES: ${env.CHANGED_MODULES}"
+                    } else {
+                        echo "Push Triggered on ${env.BRANCH_NAME}"
+                        echo "Detect Changes committed"
+                        def changes = bat(script: 'git diff --name-only HEAD~1 HEAD', returnStdout: true)
+                            .trim().split('\n').toList()
+                        def changedModules = [] as Set
+                        for (change in changes) {
+                            if (change == 'pom.xml' || change.startsWith("shared-lib/") || change == "services/pom.xml" || change.startsWith(".mvn/")) {
+                                buildAll = true
+                                break
+                            }
+                            def parts = change.split('/')
+                            if (parts.size() >= 2) {
+                                changedModules << "${parts[0]}/${parts[1]}"
+                            }
                         }
+                        env.CHANGED_MODULES = changedModules.join(',')
+                        echo "CHANGED_MODULES: ${env.CHANGED_MODULES}"
                     }
-                    env.CHANGED_MODULES = changedModules.join(',')
-                }
-            }
-        }
+                } 
+            } 
+        } 
+
         stage('Build') {
             steps {
                 script {
@@ -53,6 +78,7 @@ pipeline {
                 }
             }
         }
+
         stage('Test') {
             steps {
                 script {
@@ -68,13 +94,12 @@ pipeline {
                 }
             }
         }
-        // sonar is always triggered for full build ( we cant be selective at the project level )
         stage('SonarQube Scan') {
             steps {
                 script {
-                    if (env.CHANGED_MODULES ||  buildAll){
+                    if (env.CHANGED_MODULES || buildAll) {
                         bat "mvn sonar:sonar -Dsonar.token=${SONAR_TOKEN}"
-                    }else {
+                    } else {
                         echo 'No modules affected — skipping SonarQube Scan'
                     }
                 }
@@ -94,5 +119,6 @@ pipeline {
                 }
             }
         }
+
     } 
-}
+} 
