@@ -5,7 +5,7 @@
     <configuration>
         <enabled>true</enabled>
         <local>
-            <maxBuildsCached>3</maxBuildsCached>
+            <maxBuildsCached>2</maxBuildsCached>
         </local>
         <remote enabled="true" saveToRemote="true" id="nexus">
             <url>http://localhost:8081/repository/maven-build-cache</url>
