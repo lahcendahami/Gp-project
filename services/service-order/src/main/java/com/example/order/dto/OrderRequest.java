@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Data
 public class OrderRequest {
 
-    @NotNull(message = "User ID of the user who placed the order is required ???")
+    @NotNull(message = "User ID of the user who placed the order is required ")
     private Long userId;
 
     @NotBlank(message = "Product name is required")
