@@ -1,5 +1,4 @@
 def buildAll = false
-def affectedModules = [] as Set
 def build_goal = "clean install -DskipTests"
 def test_goal = "test"
 pipeline {
