@@ -45,7 +45,7 @@ public class OrderController {
     public ResponseEntity<ApiResponse<Order>> create(@Valid @RequestBody OrderRequest request) {
         Order created = orderService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.ok("Order placed successfully ??", created));
+                .body(ApiResponse.ok("Order placed successfully", created));
     }
 
     @PatchMapping("/{id}/status")
