@@ -26,7 +26,7 @@ pipeline {
                             .trim().split('\n').toList()
                         def changedModules = [] as Set
                         for (change in changes) {
-                            if (change == 'pom.xml' || change.startsWith("shared-lib/") || change == "services/pom.xml" || change.startsWith(".mvn/")) {
+                            if (change == 'pom.xml' || change.startsWith("shared-lib/") || change == "services/pom.xml") {
                                 buildAll = true
                                 break
                             }
